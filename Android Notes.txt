@@ -1,0 +1,110 @@
+- install from cmd; windows
+  >> sdkmanager.bat --sdk_root=C:\android-sdk-tools tools
+  >> sdkmanager.bat --sdk_root=C:\android-sdk-tools build-tools;28.0.0-rc1
+  >> sdkmanager.bat --sdk_root=C:\android-sdk-tools platform-tools
+  >> sdkmanager.bat --sdk_root=C:\android-sdk-tools platforms;android-23
+  
+@SDK Components Installed
+-------------------------
+C:\Users\<username>\AppData\Local\Android\sdk
+- Android SDK Tools 			Rev. 25.2.5 (latest)
+- Android SDK Platform-tools 	Rev. 26		(latest)
+- Android SDK Build-tools		Rev. 26 rc2 (latest)
+- Android 8.00 (API 26)
+  ~ SDK Platform
+  ~ Google play Intel x86 Atom System Image Rev 4. API 16
+  ~ Google APIs Intel x86 Atom System Image Rev 4. API 16
+- Drivers to deploy app to phyical device: https://developer.android.com/studio/run/oem-usb.html
+  
+@Install Kotlin plugin
+----------------------
+1. Open Android Studio 
+2. At the dialogue where it asks you to create a project click the cog icon
+3. Select install plugin in option
+4. Search for Kotlin and install
+  
+@Useful Links
+-------------
+Thank about when publishing the app: https://developer.android.com/google/play/filters.html
+Usage statistics: https://developer.android.com/about/dashboards/index.html
+SDK Tools: https://developer.android.com/studio/releases/sdk-tools.html
+Supporting different platform verions:
+- https://developer.android.com/training/basics/supporting-devices/platforms.html
+- https://developer.android.com/guide/topics/manifest/uses-sdk-element.html
+- https://developer.android.com/studio/command-line/sdkmanager.html
+
+@Development Guidlines
+----------------------
+- Use latest SDK Platform Tools, SDK Build Tools and SDK Tools.
+- Use latest SDK Platform and stick to standard APIs and follow development best practices; if we require a new feature not
+  supported by a previous API we test the platform version.
+  <code>
+	private void setUpActionBar() {
+    // Make sure we're running on Honeycomb or higher to use ActionBar APIs
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }	
+  </code>
+- Support for min SDK version Version 4.1.x, API 16
+- Support for target SDK version Version 7.1, API 25
+- omit max SDK version
+  ~ Allow users in the Google play store with a higher system API to see the apps
+  ~ If the device is updated and the system API exceeds the applications max sdk the app is removed
+- Before publishing to playstore, test versions from min to target sdk
+- Use built in styles and themes - the app will naturally follow the latest look and feel of Android with each new release
+  ~ https://developer.android.com/training/basics/supporting-devices/platforms.html
+  
+@Android SDK	
+------------
+- SDK Platform
+  . To compile against a particular version of Android download and install the SDK Platform for that release.
+  . To test on an emulator need to use a System Image for that release
+	
+- SDK Platform Tools 
+  . It inlcludes tools that interface with the Android platform. such as, adb, fastboot and systrace
+  . Is backwards compatible - use the latest version 
+  . Tools:
+    ~ adb
+	~ aidl, aapt, dexdump, and dx
+	~ bmgr
+	~ logcat
+	
+- SDK Build Tools
+  . A component of the Android SDK required for building Android apps
+  . By default, the Android SDK uses the most recent downloaded version of the Build Tools
+  . Tools:
+    ~ signer
+	~ proGuard
+	~ zipalign
+	~ jobb
+  
+- SDK Tools
+  . A set of development and debugging tools for Android
+  . Tools:
+    ~ Android SDK Manager (sdkmanager)
+	~ AVD Manager (avdmanager)
+	~ Dalvik Debug Monitor Server (ddms)
+  
+@Application Framework
+- The Application Framework layer provides many higher-level services to applicaitons in the form of java classes
+  ~ Activity Manager: controls al aspects of the application lifecycle and activity stack
+  ~ Content Providers: Allow applications to publish and share data with other applications
+  ~ Resource Manager: Provides access to non-code embedded resources such as strings, color settings and user interface layouts
+  ~ Notification Manager: Allows applications to display alerts and notifications to the user
+  ~ View System: An exstensible set of views used to create applcation user interfaces
+  
+@Application Components
+- Application components are loosely coupled by the application manifest file AndroidManifest.xml that describes each 
+  component of the application and how they interact.
+  ~ Activities: They dictate the UI and handle the user interaction to the smart phone screen
+  ~ Services: They handle background processing associated with an application.
+  ~ Broadcast Receivers: They handle communication between Android OS and applications
+  ~ Content Providers: They handle data and database management issues.
+  
+@The Manifest File
+- Following is the list of tags which you will use in your manifest file to specify different Android application components:
+  ~ <activity>elements for activities
+  ~ <service> elements for services
+  ~ <receiver> elements for broadcast receivers
+  ~ <provider> elements for content providers

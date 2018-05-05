@@ -1,0 +1,254 @@
+- create project
+  - create virtual env
+
+@Exercise Preperation
+<!-- Setup a Python virtual environment -->
+- Description: The following steps you will create and activate a Python virtual environment from a Terminal. By 
+               using a virtual runtime environment it's easier to manage dependancies.
+- Install Python 3.X 
+  - Offical site: https://www.python.org/
+- Create a Python virtual environment using the PYPI package 'virtualenv'
+  - steps:    
+	1. Open Terminal (Windows) or Bash (Linux, MaxOSX)		
+	2. Change directory in terminal to '<dir>\RESTful App'
+	3. Update pip (Python package manager)
+	   >> python -m pip install --upgrade pip
+	4. Install the 'virtualenv' package as a system-wide package
+	   >> pip install virtualenv	
+	5. Create the Python virtual environment
+	   >> virtualenv venv
+	6. Activate virtual environment session
+	   - Windows: .\venv\Scripts\activate.bat
+	   - Linux:	source ./venv/bin\activate.sh
+
+<!-- Setup Postman -->
+- Description: Postman is a service that lets you create, manage and test RESTful web requests. A great tool for rapid
+               prototyping a backend Web API.
+- Create an account with Postman			   
+  - Offical Site: https://www.getpostman.com/
+- Download, install, open and sign into the Postman application
+- Create a new Workspace called 'RESTful App'
+  			   		   
+@Exercise 1
+- Description: First design the API interface in Postman for a fictitious store, then write 
+			   the Python code and test the API.The specification of the API interface is:
+
+- Instructions: Create the API interface in Postman. You'll only need to define the URL(s) not 
+                the request body/response:						
+- Steps: 
+ - Step 1. Install the PYPI package flask in virtual environment:
+   >> pip install flask
+ - Step 2. In Postman create a new Workspace called 'RESTful API'
+ - Step 3. Create a collection called 'Exercise1'
+ - Step 4. In the collection create and save five web requests that match the below specification:
+  - GET Request:
+    - Description: Return all the items in our store
+    - URL: <hostname>/items	
+	- Response (status code 200):
+	{
+		"items": [
+			{
+				"name": "ball",
+				"price": 15.95
+			}
+		]
+	}
+  - GET Request:
+	- Description: return an item from store given the item name
+	- URL: <hostname>/item/<name>	
+	~ Scenario 1. Item is in the store
+	- Respone (status code 200): 
+	{
+		"item": {
+			"name": "ball",
+			"price": 15.95
+		}
+	}    					
+	~ Scenario 2. Item is not in the store
+	- Respone (status code 404): 
+	{
+		"item": null
+	}	
+  - POST Request:
+	- Description: Create an item in the store
+	- URL: <hostname>/item/<name>
+	~ Scenario 1. Item is not in store
+	- Body:
+	{
+		"name": "ball",
+		"price": 15.95
+	}
+	- Response (status code 201)
+	{
+		"price": 15.95
+	}	
+	~ Scenario 2. Item is in store
+	- Body:
+	{
+		"name": "ball",
+		"price": 15.95
+	}
+	- Response (status code 400)
+	{
+		"message": "An item with name 'ball' already exists."
+	}
+  - PUT Request:
+	- Description: Create or update an item in the store
+	- URL: <hostname>/item/<name>
+	~ Scenario 1. Item is not in store
+	- Body:
+	{
+		"name": "ball",
+		"price": 15.95
+	}
+	- Response (status code 201)
+	{
+		"price": 15.95
+	}	
+	~ Scenario 2. Item is in store
+	- Body:
+	{
+		"name": "ball",
+		"price": 18.50
+	}
+	- Response (status code 200)
+	{
+		"price": 18.50
+	}		
+  - DELETE Request:
+	- Delete an item from the store
+	- URL: <hostname>/item/<name>
+	~ Scenario 1. Item is not in store
+	- Body:
+	- Response (status code 200)
+	{
+		"message": "Item deleted"
+	}	
+ - Step 5. Test API from 'Step 4' with the sample application you be writing
+   - Change into directory '<dir>\RESTful App\Exercise1\solution'
+   - Run the flask application:
+     >> python app.py
+   - To exit the applicaition press CRT+C from terminal
+ - Step 6. Complete the application under '<dir>\RESTful App\Exercise1\code' and test with Postman
+ 
+@Exercise 2
+- Description: Continuing on from Exercise 1 we will refactor the code using a flask exstention call flask_restful. This
+               exstention reduces a lot of boilerplate code. Instead of decorating a function with a route a class will 
+			   represent a 'Resource' and the class methods represent the routes.
+			   
+			   The solution in '<dir>\RESTful App\Exercise2\solution\app.py' better illustrates this idea. You can begin
+			   this application from the terminal and test with Postman using the same web requests from Exercise1.
+- steps:
+  - Start Python virtual session
+  - Install PIPY package flask_restful:
+    >> pip install flask_restful
+  - In Postman duplicate the collection 'Exercise1' and call it 'Exercise2'	
+  - Change working dir in terminal to '<dir>\RESTful App\Exercise2\solution\
+  - Start flask application:
+    >> python app.py
+  - Test application with Postman
+  - Complete the program Exercise2\code\app.py using the solution as a reference
+
+@Exercise 3
+- Description: Continuing on from Exercise 2 we will add data persistance with SQLite
+- steps:
+  - Start Python virtual session
+  - Change working dir in terminal to '<dir>\RESTful App\Exercise3\solution\
+  - Create the SLQLite database
+    >> python create_tables.py
+  - Start flask application
+    >> python app.py
+  - Test application with Postman
+  - Complete the program Exercise3\code\app.py using the solution as a reference
+- Points of interest
+  - The item class has been moved into a new file called item.py
+  - The Item's member methods get, put, post and delete have been updated to perform database operations instead of
+    updateing an in memory database
+
+@Exercise 4
+- Description: Continuing on from Exercise 3 we will use the SQLAlchemy exstention to reduce boiler plate code. The
+               Item class will be split into two classes, ItemModel and Item.
+			   1. The ItemModel class is a model which represents an internal entity and contain helper methods
+			   2. The Item clas is a resource that represents an external entity and is what the web clients see
+
+			   You will motice the models reside under the module 'models', and resources reside under 'resources'. 
+			   see Exercise4\solution\app.py for reference.
+- steps:
+  - Start Python virtual session
+  - Install the 'flask_sqlalchemy' package
+    >> >pip install flask_sqlalchemy
+  - Change working dir in terminal to '<dir>\RESTful App\Exercise4\solution\
+  - Start flask application
+    >> python app.py
+  - Test application with Postman
+  - Complete the program Exercise4\code\app.py using the solution as a reference
+- Points of interest
+  - The function 'create_tables()' in app.py will create the database automatically on the first web request
+
+@Exercise 5
+- Description: Continuing on from Exercise 4 we will add a Store resource. A store contains a number of items, each
+               item contains a store id.
+  API: Three new APIs and one updated API			   
+  - GET Request:
+    - Description: Get all the stores
+    - URL: <hostname>/stores
+	- Respons:
+	  {
+		"stores": [
+			{
+				"id": 1,
+				"name": "shoeshop",
+				"items": []
+			}
+		]
+	  }
+   - GET Request:
+     - Description: Get a a store by name
+	 - URL: <hostname>/store/<name>
+	 - Response:
+	    {
+			"id": 1,
+			"name": "shoeshop",
+			"items": []
+		}
+   - POST Request:
+     - Description: Create a new store
+	 - URL: <hostname>/store/<name>
+   - GET Request: (updated)
+   - URL: <hostname>/item/<name>
+   - The request body now takes a store id:
+    {
+		"store_id": 1,
+		"price": 10.10
+	}
+- steps:
+  - Start Python virtual session
+  - Install the 'flask_sqlalchemy' package
+    >> >pip install flask_sqlalchemy
+  - Change working dir in terminal to '<dir>\RESTful App\Exercise5\solution\
+  - Start flask application
+    >> python app.py
+  - Test application with Postman   
+	
+@Exercise 6
+- Description: Continuing on from Exercise 5 we will add javascript web token support for authtication. 
+  - notes
+    - Talk about security.py
+	- Import collections
+  
+@Exercise 7
+- Description: Continuing on from Exercise 6 we will optimise Postman to substitute JWT tokens in to authenticated 
+               requests
+  - notes
+    - Have them import collection and walk them through the changes
+
+	
+  
+- connect to post gress			   
+- optimise postman
+- deploy to 
+- deploy to heroku
+
+			   
+- exercise x
+pip install flask_jwt

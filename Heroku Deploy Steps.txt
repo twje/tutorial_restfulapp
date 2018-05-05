@@ -1,0 +1,125 @@
+(venv) C:\Users\Thomas\Desktop\study\programming\python\snippets\delete>heroku g
+it:clone --app test4grit
+
+(venv) C:\Users\Thomas\Desktop\study\programming\python\snippets\delete>heroku a
+pps:destroy test4grit
+
+(venv) C:\Users\Thomas\Desktop\study\programming\python\devops\heroku\temp>herok
+u logs --tail --app test4test123
+
+@links
+------
+- Reset postgressql password:
+  - https://serverfault.com/questions/110154/whats-the-default-superuser-username-password-for-postgres-after-a-new-install
+
+@Create Virtual Python Environment
+----------------------------------
+- Description: To encapsulate the runtime and dependencies
+- Common Steps:
+  >> pip install virtualenv
+  >> virtualenv --version
+- method 1:  
+  >> cd <project>
+  >> virtualenv .
+- method 2:
+  >> 
+  
+@Run Web Application Locally
+----------------------------
+- Start virtual python session:
+  >> .\<project>\Scripts\activitate.bat
+- Install packages
+  >> pip flask
+  >> pip install Flask-SQLAlchemy
+  >> pip install psycopg2
+  
+@Create local postgresql database
+---------------------------------
+- step 1. install postgressql, from pgAdmin3 create a new table called 'height_collector' and set owner as 'postgres'
+- step 2. Add the following config to top of file:
+		  </code>
+			 app.config['SQLALCHEMY_DATABASE_URI']='postgresql://postgres:<pw removed>@localhost/height_collector'  
+		  <code>
+- step 3. In a python session import 'db' object, refer to app.py for details
+		  >> from app import db
+- step 4. Execute a method on the db object to create tables
+          >> db.create_all()
+
+@Heroku: Prepare Local App for Deployment
+-----------------------------------------
+Info. Create four files that are used by Heroku:
+      1. requirements.txt
+	  2  runtime.txt
+	  3. Procfile
+	  4. .gitignore
+Step 1. requirements.txt
+      - Begin python virtual environment session
+	  - Install pypi package 'gunicorn'
+	    >> pip install gunicorn
+	  - Create 'requirements.txt' file to tell Heroku which dependencies are needed
+	    >> pip freeze > requirements.txt
+Step 2. Procfile
+      - Create a file called 'Procfile' and add:
+	    web: gunicorn app:app // where the first app is the .py file and teh second app is the app object
+Step 3. runtime.txt
+      - Create a file to tell Heroku which runtime to use: (see https://devcenter.heroku.com/articles/python-runtimes)
+	    python-3.6.4
+Step 4. .gitignore		
+      - Create a .gitignore
+        >> notepad .gitignore (on windows)	  
+Step 6. Create a git repository for app
+        >> git init
+		>> git add .
+		>> git commit -m "initial commit"
+	
+@Heroku: Create Heroku App
+--------------------------
+>> heroku login
+>> heroku create <app_name>
+		
+@Heroku: Associate Database with App
+-----------------------------------
+Step 1. Associate a new database with an existing app:
+	    >> heroku login		
+		>> heroku addons:create heroku-postgresql:hobby-dev --app <app_name>		
+Step 3. Confirm the database is associated:
+        >> heroku info --app <app_name>		
+Step 2. Source connection string: (update connection string in source file)
+        >> heroku config --app <app_name>
+		- Note, append '?sslmode=require' to end of connection string to allow a connetion from cmd
+
+heroku addons:docs heroku-postgresql
+		
+@Heroku: Deploy to Heroku
+-------------------------
+- connect CLI session to app
+  >> heroku git:remote --app test4test123
+- Confirm app is connected
+  >> heroku info
+- Deploy to app to Heroku
+  >> git push heroku master
+- Start app
+  >> heroku open
+  
+@Heroku: Create Database Tables
+-------------------------------
+- A deployed web App and an empty Database
+1. Begin a Heroku python session (first connect CLI session to app)
+   >> heroku run python
+2. Open Python CLI at Root directory of App
+   >> from app import db
+   >> cb.create_all()
+   >> exit()   
+
+@Heroku: Confirm Table Creation
+>> heroku pg:psql --app <app_name>
+   
+@Heroku Command Reference
+-------------------------
+- Run bash from Heroku
+  >> heroku run bash (first connect CLI session to app)
+		  
+- complete udemy tutorial for python
+- run locally with postgresDB  
+- delete apps on heroku
+  
